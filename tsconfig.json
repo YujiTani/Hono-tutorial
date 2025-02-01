@@ -1,10 +1,12 @@
 {
+  "extends": "@tsconfig/strictest/tsconfig.json",
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "strict": true,
     "skipLibCheck": true,
+    "noImplicitReturns": false,
     "lib": [
       "ESNext"
     ],
@@ -14,4 +16,5 @@
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx"
   },
+  "include": ["src/**/*"]
 }
