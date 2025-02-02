@@ -9,12 +9,15 @@
     "prisma:generate": "prisma generate",
     "prisma:watch": "prisma generate --watch",
     "prisma:reset": "prisma migrate reset --force",
-    "prisma:studio": "prisma studio"
+    "prisma:studio": "prisma studio",
+    "prepare": "husky"
   },
   "dependencies": {
     "@hono/swagger-ui": "^0.5.0",
     "@hono/zod-openapi": "^0.18.3",
     "hono": "^4.6.20",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.4.3",
     "zod": "^3.24.1"
   },
   "devDependencies": {
@@ -33,5 +36,11 @@
     "prettier": "^3.4.2",
     "prisma": "^6.3.0",
     "wrangler": "^3.101.0"
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx}": [
+      "bun run lint",
+      "bun run format"
+    ]
   }
 }
