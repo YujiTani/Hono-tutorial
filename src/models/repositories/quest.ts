@@ -1,8 +1,9 @@
 import { Prisma, PrismaClient } from "@prisma/client";
+import { LimitOffsetRequest } from "../types/common";
+import { CreateRequest } from "../usecases/quests";
 
 const prisma = new PrismaClient();
 
-// Prisma の Quest モデルを参照
 export type Quest = Prisma.QuestGetPayload<{}>;
 
 /**
@@ -19,16 +20,44 @@ export const count = async () => {
 
 /**
  * クエスト一覧を取得する
- * @param limit 取得するクエストの数
- * @param offset 取得するクエストの開始位置
+ * @param payload.query クエスト名で検索するクエリ
+ * @param payload.limit 取得するクエストの数
+ * @param payload.offset 取得するクエストの開始位置
  * @returns クエスト一覧
  */
-export const findAll = async (limit: number, offset: number): Promise<Quest[]> => {
+export const findAll = async (payload: LimitOffsetRequest): Promise<Quest[]> => {
   return await prisma.quest.findMany({
     where: {
       deletedAt: null,
+      name: {
+        contains: payload.query,
+      },
     },
-    skip: offset,
-    take: limit,
+    skip: payload.offset,
+    take: payload.limit,
+    orderBy: {
+      createdAt: "desc",
+    },
   });
 };
+
+/**
+ * クエストを作成する
+ * @param uuid クエストのUUID
+ * @param payload クエストのデータ
+ * @returns 作成されたクエスト
+ */
+export const create = async (payload: { uuid: string } & CreateRequest) => {
+  return await prisma.quest.create({
+    data: {
+      ...payload,
+    },
+  });
+};
+
+/**
+ * クエストを更新する
+ * @param uuid クエストのUUID
+ * @param payload クエストのデータ
+ * @returns 更新されたクエスト
+ */

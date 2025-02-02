@@ -1,4 +1,45 @@
 import * as questRepository from "../repositories/quest";
+import { v7 as uuidv7 } from "uuid";
+import { Prisma } from "@prisma/client";
+import { BaseResponse, LimitOffsetRequest } from "../types/common";
+
+/**
+ * クエストを作成するためのリクエスト
+ */
+export type CreateRequest = Pick<Prisma.QuestCreateInput, "name" | "description" | "state">;
+
+/**
+ * クエストを更新するためのリクエスト
+ */
+export type UpdateRequest = Pick<Prisma.QuestUpdateInput, "name" | "description" | "state"> & {
+  id?: number;
+  uuid?: string;
+};
+
+/**
+ * クエストを削除するためのリクエスト
+ */
+export type DeleteRequest = {
+  id?: number;
+  uuid?: string;
+};
+
+/**
+ * クエスト一覧を返すレスポンス
+ */
+export type QuestListResponse = {
+  quests: QuestResponse[];
+} & BaseResponse;
+
+/**
+ * クエストを返すレスポンス
+ */
+export type QuestResponse = {
+  uuid: string;
+  name: string;
+  description: string | null;
+  state: string;
+};
 
 /**
  * クエストの総数を取得する
@@ -10,12 +51,25 @@ export const getCount = async () => {
 
 /**
  * クエスト一覧を取得する
- * @param limit 取得するクエストの数
- * @param offset 取得するクエストの開始位置
+ * @param payload.query クエスト名で検索するクエリ
+ * @param payload.limit 取得するクエストの数
+ * @param payload.offset 取得するクエストの開始位置
  * @returns クエスト一覧
  */
-export const getAll = async (limit: number, offset: number) => {
-  return await questRepository.findAll(limit, offset);
+export const getAll = async (payload: LimitOffsetRequest) => {
+  return await questRepository.findAll(payload);
+};
+
+/**
+ * クエストを作成する
+ * @param name クエストの名前
+ * @param description クエストの説明
+ * @param state クエストの状態
+ * @returns クエスト
+ */
+export const create = async (payload: CreateRequest) => {
+  const uuid = uuidv7();
+  return await questRepository.create({ uuid, ...payload });
 };
 
 /**
