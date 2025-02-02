@@ -1,28 +1,31 @@
-import { Hono } from "hono";
+import { Hono} from "hono";
 
-import { basicAuth } from "hono/basic-auth";
+import { every } from 'hono/combine'
 // import { bearerAuth } from 'hono/bearer-auth'
 import { logger } from "hono/logger";
 import { prettyJSON } from "hono/pretty-json";
 import { requestId } from "hono/request-id";
 
 import routes from "./routes";
+import { customAuth } from "./middlewares/auth";
 
-const app = new Hono().basePath("/api/v1");
+const app = new Hono()
 
-app.route("/", routes);
+/**
+* 必ず適用するミドルウェアを combine の every でまとめている
+* 認証が失敗した場合、以降のミドルウェアは実行されない
+* https://hono-ja.pages.dev/docs/middleware/builtin/combine
+*/
+app.use("*", async (c, next) => {
+  await every(
+    customAuth,
+      logger(),
+      prettyJSON(),
+      requestId()
+  )(c, next)
+})
 
-// ログ出力
-app.use(logger());
-
-// 認証
-app.use("*", basicAuth({ username: "user", password: "password" }));
-// app.use('*', bearerAuth({ token }))
-
-// MEMO: urlクエリパラメータに?prettyを追加することで整形されたJSONを返す
-app.use(prettyJSON());
-// MEMO: レスポンスにX-Request-Idヘッダーを追加
-app.use("*", requestId());
+app.route("/api/v1", routes);
 
 app.get("/", (c) => {
   return c.json({
