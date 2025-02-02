@@ -1,6 +1,6 @@
-import { Hono} from "hono";
+import { Hono } from "hono";
 
-import { every } from 'hono/combine'
+import { every } from "hono/combine";
 // import { bearerAuth } from 'hono/bearer-auth'
 import { logger } from "hono/logger";
 import { prettyJSON } from "hono/pretty-json";
@@ -9,21 +9,16 @@ import { requestId } from "hono/request-id";
 import routes from "./routes";
 import { customAuth } from "./middlewares/auth";
 
-const app = new Hono()
+const app = new Hono();
 
 /**
-* 必ず適用するミドルウェアを combine の every でまとめている
-* 認証が失敗した場合、以降のミドルウェアは実行されない
-* https://hono-ja.pages.dev/docs/middleware/builtin/combine
-*/
+ * 必ず適用するミドルウェアを combine の every でまとめている
+ * 認証が失敗した場合、以降のミドルウェアは実行されない
+ * https://hono-ja.pages.dev/docs/middleware/builtin/combine
+ */
 app.use("*", async (c, next) => {
-  await every(
-    customAuth,
-      logger(),
-      prettyJSON(),
-      requestId()
-  )(c, next)
-})
+  await every(customAuth, logger(), prettyJSON(), requestId())(c, next);
+});
 
 app.route("/api/v1", routes);
 

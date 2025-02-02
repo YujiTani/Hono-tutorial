@@ -1,4 +1,4 @@
-import { Hono } from 'hono'
+import { Hono } from "hono";
 
 // MEMO: RPC 機能を使う場合、routeはメソッドチェーンで記述する
 const app = new Hono()
@@ -6,4 +6,4 @@ const app = new Hono()
   .post("/", (c) => c.json("create a quest", 201))
   .get("/:id", (c) => c.json(`get ${c.req.param("id")}`));
 
-export default app
+export default app;
