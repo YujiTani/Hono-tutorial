@@ -5,8 +5,9 @@
     "deploy": "wrangler deploy --minify",
     "lint": "eslint src",
     "format": "prettier --write src",
-    "prisma:migrate": "prisma migrate dev",
+    "prisma:migrate": "prisma migrate dev --name",
     "prisma:generate": "prisma generate",
+    "prisma:watch": "prisma generate --watch",
     "prisma:reset": "prisma migrate reset --force",
     "prisma:studio": "prisma studio"
   },
