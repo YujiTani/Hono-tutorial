@@ -1,8 +1,16 @@
 import { Prisma, PrismaClient } from "@prisma/client";
-import { LimitOffsetRequest } from "../types/common";
-import { CreateRequest } from "../usecases/quests";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { Pool } from "pg";
 
-const prisma = new PrismaClient();
+import { CreateRequest } from "../usecases/quests";
+import { LimitOffsetRequest } from "../types/common";
+
+const connectionString = "postgresql://japonmaster:password@localhost:5600/questory";
+console.log("connectionString", connectionString);
+
+const pool = new Pool({ connectionString });
+const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient({ adapter });
 
 export type Quest = Prisma.QuestGetPayload<{}>;
 
