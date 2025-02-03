@@ -40,25 +40,25 @@ const app = new Hono()
     const quest = await questUsecase.create({ name, description, state });
     const response: questUsecase.QuestResponse = await questUsecase.getQuestResponse(quest);
     return c.json(response, 201);
-  })
-  .get("/:id", async (c) => {
-    const { id } = c.req.param();
-    const quest = await prisma.quest.findUnique({
-      where: { id: Number(id) },
-    });
-
-    if (!quest) {
-      return c.json({ error: "Quest not found" }, 404);
-    }
-
-    const response: questUsecase.QuestResponse = {
-      uuid: quest.uuid,
-      name: quest.name,
-      description: quest.description,
-      state: quest.state,
-    };
-
-    return c.json(response, 200);
   });
+// .get("/:id", async (c) => {
+//   const { id } = c.req.param();
+//   const quest = await prisma.quest.findUnique({
+//     where: { id: Number(id) },
+//   });
+
+//   if (!quest) {
+//     return c.json({ error: "Quest not found" }, 404);
+//   }
+
+//   const response: questUsecase.QuestResponse = {
+//     uuid: quest.uuid,
+//     name: quest.name,
+//     description: quest.description,
+//     state: quest.state,
+//   };
+
+//   return c.json(response, 200);
+// });
 
 export default app;
