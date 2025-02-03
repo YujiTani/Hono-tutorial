@@ -1,0 +1,16 @@
+### GET クエスト一覧を取得する
+GET http://localhost:49231/api/v1/quests
+?query=sample&limit=10&offset=0
+Content-Type: application/json
+Authorization: Basic user:password
+
+### POST 新規クエストを作成する
+POST http://localhost:49231/api/v1/quests
+Content-Type: application/json
+Authorization: Basic user:password
+
+{
+  "name": "New Quest",
+  "description": "This is a new quest description.",
+  "state": "active"
+} 
