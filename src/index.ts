@@ -20,11 +20,10 @@ app.use("*", async (c, next) => {
   await every(customAuth, logger(), prettyJSON(), requestId())(c, next);
 });
 
-app.route("/api/v1", routes);
+app.route("/api", routes);
 
 app.get("/", (c) => {
   return c.json({
-    requestId: c.req.header("X-Request-Id"),
     message: "Hello Hono!",
   });
 });
